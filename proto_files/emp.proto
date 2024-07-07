@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+option go_package = "proto/emp";
+
+message Contact{
+    string home_addr = 1;
+    string mob_num = 2;
+    string mail_id = 3;
+}
+
+message Employee{
+    string id = 1;
+    string first_name = 2;
+    string last_name = 3;
+    string role = 4;
+    Contact contact = 5;
+}
+
+message EmployeeID{
+    string id = 1;
+}
+
+service EmployeeManagement{
+    //get the employee details by providing the EmployeeID
+    //return statusNOTFOUND if the ID doesnot match any Employee
+    rpc getEmployee(EmployeeID) returns (Employee);
+
+
+
+    //List all the Employees.It takes empty request type
+    rpc listEmployees(google.protobuf.Empty) returns (stream Employee);
+
+
+
+    //Create Employee by providing the EmployeeDetails and return the EmployeeID
+    //Return Status.Internal if the Employee is not able to Create
+    //Return Status.AlreadyExists if the id already exists
+    rpc setEmployee(Employee) returns (EmployeeID);
+
+
+
+    //Create an employee by providing the Employee Details and return the Employee ID
+    //Return Status.INTERNAL if the Employee is not able to Create
+    //Returns Status.AlreadyExists if the id already exists
+    rpc updateEmployee(Employee) returns (google.protobuf.Empty);
+
+    
+
+    //Delete the Employee by providing the EmployeeID and empty response is returned
+    //Returns Status.NOT_FOUND if the id doesnot matches any Employee
+    //Returns Status.INTERNAL if the EMployee is not able to Delete
+    rpc deleteEmployee(EmployeeID) returns (google.protobuf.Empty);
+
+
+}
